@@ -59,7 +59,6 @@ const getContractByBlock = async (block, Moralis, chain) => {
       block_number_or_hash: block,
     });
     // const blockData = await web3.eth.getBlock(block);
-    console.log(blockData);
     for (let i = 0; i < blockData.transactions.length; i++) {
       // const tx = await web3.eth.getTransactionReceipt(
       //   blockData.transactions[i]
