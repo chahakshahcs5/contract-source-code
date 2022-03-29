@@ -27,6 +27,7 @@ const getLatestContract = async (web3, Moralis, chain) => {
         latestBlock - data[0].LastEthBlock > 5000
           ? data[0].LastEthBlock + 5000
           : latestBlock;
+      console.log(toBLock);
       for (let i = data[0].LastEthBlock; i < toBLock; i++) {
         await getContractByBlock(i, Moralis, chain);
       }

@@ -43,14 +43,14 @@ mongoose
         eth.start();
 
         // polygon
-        const polygon = cron.schedule("*/30 * * * *", async () => {
-          console.log("running");
-          await getLatestContract(
-            new Web3(process.env.POLYGON_SERVER_URL),
-            Moralis,
-            "matic"
-          );
-        });
+        // const polygon = cron.schedule("*/30 * * * *", async () => {
+        //   console.log("running");
+        //   await getLatestContract(
+        //     new Web3(process.env.POLYGON_SERVER_URL),
+        //     Moralis,
+        //     "matic"
+        //   );
+        // });
         // polygon.start();
       } catch (error) {
         console.log(error);
