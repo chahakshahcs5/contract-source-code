@@ -32,7 +32,7 @@ mongoose
         await Moralis.start({ serverUrl, appId });
 
         // eth
-        const eth = cron.schedule("0 * * * *", async () => {
+        const eth = cron.schedule("*/30 * * * *", async () => {
           console.log("running");
           await getLatestContract(
             new Web3(`https://mainnet.infura.io/v3/${process.env.INFURA_KEY}`),
@@ -43,7 +43,7 @@ mongoose
         eth.start();
 
         // polygon
-        const polygon = cron.schedule("30 * * * *", async () => {
+        const polygon = cron.schedule("*/30 * * * *", async () => {
           console.log("running");
           await getLatestContract(
             new Web3(process.env.POLYGON_SERVER_URL),
@@ -51,7 +51,7 @@ mongoose
             "matic"
           );
         });
-        polygon.start();
+        // polygon.start();
       } catch (error) {
         console.log(error);
       }
