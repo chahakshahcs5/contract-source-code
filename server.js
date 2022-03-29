@@ -16,6 +16,10 @@ const CONNECTION_URL = process.env.CONNECTION_URL;
 const serverUrl = process.env.SERVER_URL;
 const appId = process.env.APP_ID;
 
+app.get("/", (req, res) => {
+  res.status(200).send("Hello World");
+});
+
 mongoose
   .connect(CONNECTION_URL, {
     useNewUrlParser: true,
