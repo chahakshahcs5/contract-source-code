@@ -93,7 +93,7 @@ const getContractByBlock = async (block, Moralis, chain) => {
     }
   } catch (error) {
     console.log(error);
-    await errorDb.create({ BlockNumber: block });
+    await errorDb.create({ BlockNumber: block, Chain: chain });
   }
 };
 
