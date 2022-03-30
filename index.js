@@ -24,9 +24,10 @@ const getLatestContract = async (web3, Moralis, chain) => {
     const latestBlock = await web3.eth.getBlockNumber();
     const data = await generalDb.find({});
     if (chain == "eth") {
+      console.log(latestBlock - data[0].LastEthBlock > +process.env.LOOP);
       const toBLock =
-        latestBlock - data[0].LastEthBlock > +process.env.LOOP
-          ? data[0].LastEthBlock + process.env.LOOP
+        latestBlock - data[0].LastEthBlock > parseInt(process.env.LOOP)
+          ? data[0].LastEthBlock + parseInt(process.env.LOOP)
           : latestBlock;
       console.log(toBLock);
       for (let i = data[0].LastEthBlock; i < toBLock; i++) {
@@ -38,8 +39,8 @@ const getLatestContract = async (web3, Moralis, chain) => {
       );
     } else {
       const toBLock =
-        latestBlock - data[0].LastPolygonBlock > +process.env.LOOP
-          ? data[0].LastPolygonBlock + process.env.LOOP
+        latestBlock - data[0].LastPolygonBlock > parseInt(process.env.LOOP)
+          ? data[0].LastPolygonBlock + parseInt(process.env.LOOP)
           : latestBlock;
       for (let i = data[0].LastPolygonBlock; i < toBLock; i++) {
         await getContractByBlock(i, Moralis, chain);
