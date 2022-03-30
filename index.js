@@ -2,6 +2,7 @@ require("dotenv").config();
 const axios = require("axios");
 const generalDb = require("./model/general");
 const contractDb = require("./model/contract");
+const errorDb = require("./model/error");
 
 const getPastContract = async () => {
   try {
@@ -92,6 +93,7 @@ const getContractByBlock = async (block, Moralis, chain) => {
     }
   } catch (error) {
     console.log(error);
+    await errorDb.create({ BlockNumber: block });
   }
 };
 
