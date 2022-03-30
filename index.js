@@ -83,7 +83,7 @@ const getContractByBlock = async (block, Moralis, chain) => {
             Proxy: data.data.result[0].Proxy,
             Implementation: data.data.result[0].Implementation,
             Chain: "ethereum",
-            TimeStamp: tx.block_timestamp,
+            TimeStamp: new Date(tx.block_timestamp),
             TransactionHash: tx.hash,
             BlockNumber: blockData.number,
             From: tx.from_address,

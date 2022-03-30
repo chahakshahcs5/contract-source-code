@@ -10,7 +10,7 @@ const contractSchema = new mongoose.Schema({
   Proxy: String,
   Implementation: String,
   Chain: String,
-  TimeStamp: String,
+  TimeStamp: Date,
   TransactionHash: String,
   BlockNumber: Number,
   From: String,
