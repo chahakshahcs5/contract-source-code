@@ -4,72 +4,33 @@ const generalDb = require("./model/general");
 const contractDb = require("./model/contract");
 const errorDb = require("./model/error");
 
-const getPastContract = async () => {
-  try {
-    const data = await generalDb.find({});
-    for (let i = data.OldLastEthBlock; i < data.OldLastEthBlock - 400; i--) {
-      await getContractByBlock(i);
-    }
-    await generalDb.findByIdAndUpdate(
-      { _id: data[0]._id },
-      { $set: { OldLastEthBlock: data.OldLastEthBlock - 400 } }
-    );
-  } catch (error) {
-    console.log(error);
-  }
-};
-
 const getLatestContract = async (web3, Moralis, chain) => {
   try {
     const latestBlock = await web3.eth.getBlockNumber();
     const data = await generalDb.find({});
-    if (chain == "eth") {
-      const toBLock =
-        latestBlock - data[0].LastEthBlock > parseInt(process.env.LOOP)
-          ? data[0].LastEthBlock + parseInt(process.env.LOOP)
-          : latestBlock;
-      for (let i = data[0].LastEthBlock; i < toBLock; i++) {
-        await getContractByBlock(i, Moralis, chain);
-      }
-      await generalDb.findByIdAndUpdate(
-        { _id: data[0]._id },
-        { $set: { LastEthBlock: toBLock } }
-      );
-    } else {
-      const toBLock =
-        latestBlock - data[0].LastPolygonBlock > parseInt(process.env.LOOP)
-          ? data[0].LastPolygonBlock + parseInt(process.env.LOOP)
-          : latestBlock;
-      for (let i = data[0].LastPolygonBlock; i < toBLock; i++) {
-        await getContractByBlock(i, Moralis, chain);
-      }
-      await generalDb.findByIdAndUpdate(
-        { _id: data[0]._id },
-        { $set: { LastPolygonBlock: toBLock } }
-      );
+    // const toBLock =
+    //   latestBlock - data[0].LastEthBlock > parseInt(process.env.LOOP)
+    //     ? data[0].LastEthBlock + parseInt(process.env.LOOP)
+    //     : latestBlock;
+    for (let i = data[0].LastEthBlock; i < latestBlock; i++) {
+      await getContractByBlock(i, Moralis, chain, data[0]._id);
     }
   } catch (error) {
     console.log(error);
   }
 };
 
-const getContractByBlock = async (block, Moralis, chain) => {
+const getContractByBlock = async (block, Moralis, chain, id) => {
   try {
     const blockData = await Moralis.Web3API.native.getBlock({
       chain,
       block_number_or_hash: block,
     });
-    // const blockData = await web3.eth.getBlock(block);
     for (let i = 0; i < blockData.transactions.length; i++) {
-      // const tx = await web3.eth.getTransactionReceipt(
-      //   blockData.transactions[i]
-      // );
       const tx = blockData.transactions[i];
       if (tx.to_address == null) {
         const data = await axios.get(
-          chain == "eth"
-            ? `https://api.etherscan.io/api?module=contract&action=getsourcecode&address=${tx.receipt_contract_address}&apikey=${process.env.ETHERSCAN_API_KEY}`
-            : `https://api.polygonscan.io/api?module=contract&action=getsourcecode&address=${tx.receipt_contract_address}&apikey=${process.env.POLYGONSCAN_API_KEY}`
+          `https://api.etherscan.io/api?module=contract&action=getsourcecode&address=${tx.receipt_contract_address}&apikey=${process.env.ETHERSCAN_API_KEY}`
         );
         if (data.data && data.data.result[0].SourceCode) {
           await contractDb.create({
@@ -90,6 +51,7 @@ const getContractByBlock = async (block, Moralis, chain) => {
         }
       }
     }
+    await generalDb.findByIdAndUpdate(id, { $set: { LastEthBlock: block } });
   } catch (error) {
     console.log(error);
     await errorDb.create({ BlockNumber: block, Chain: chain });
@@ -97,7 +59,6 @@ const getContractByBlock = async (block, Moralis, chain) => {
 };
 
 module.exports = {
-  getPastContract,
   getLatestContract,
   getContractByBlock,
 };
