@@ -34,11 +34,11 @@ mongoose
         // eth
         // const eth = cron.schedule("*/30 * * * *", async () => {
         //   console.log("running");
-        await getLatestContract(
-          new Web3(`https://mainnet.infura.io/v3/${process.env.INFURA_KEY}`),
-          Moralis,
-          "eth"
-        );
+        // await getLatestContract(
+        //   new Web3(`https://mainnet.infura.io/v3/${process.env.INFURA_KEY}`),
+        //   Moralis,
+        //   "eth"
+        // );
         // });
         // eth.start();
 
