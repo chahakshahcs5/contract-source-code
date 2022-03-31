@@ -28,7 +28,7 @@ const getContractByBlock = async (block, Moralis, chain, id) => {
     });
     for (let i = 0; i < blockData.transactions.length; i++) {
       const tx = blockData.transactions[i];
-      if (tx.to_address == null && tx.receipt_status) {
+      if (tx.to_address == null && tx.receipt_status == 1) {
         const data = await axios.get(
           `https://api.etherscan.io/api?module=contract&action=getsourcecode&address=${tx.receipt_contract_address}&apikey=${process.env.ETHERSCAN_API_KEY}`
         );
