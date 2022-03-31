@@ -51,7 +51,7 @@ const getContractByBlock = async (block, Moralis, chain, id) => {
         }
       }
     }
-    await generalDb.findByIdAndUpdate(id, { $set: { LastEthBlock: block } });
+    // await generalDb.findByIdAndUpdate(id, { $set: { LastEthBlock: block } });
   } catch (error) {
     console.log(error);
     await errorDb.create({ BlockNumber: block, Chain: chain });
